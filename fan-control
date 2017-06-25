@@ -3,19 +3,9 @@
 # Based on 2011 script by Axel Kohlmeyer <akohlmey@gmail.com>,
 # https://sites.google.com/site/akohlmey/random-hacks/nvidia-gpu-coolness
 #
-# Adapted for Nvidia Titan X Pascal Linux Driver 367
-# by Boris Dimitrov <dimiroll@gmail.com> in 2016.
-# Use at your own risk!
+# Ruby is required to run to script:
 #
-# Suggested installation:
-#
-#     Unpack somewhere, say in directory
-#
-#         ${HOME}/set-gpu-fans
-#
-#     and create a link there from /opt, like so
-#
-#         ln -sf ${HOME}/set-gpu-fans /opt/set-gpu-fans
+#     sudo apt-get install ruby2.3
 #
 # Already running an X server?
 #
@@ -24,18 +14,21 @@
 #
 # Suggested usage:
 #
-#    cd /opt/set-gpu-fans
-#    sudo tcsh
-#    ./cool_gpu >& controller.log &
-#    tail -f controller.log
+#    cd nvidia-fan-control
+#    sudo ./fan-control
 #
 # Seems to work fine on headless ubuntu systems with one or two compute GPUs.
 # Not intended to run automatically at system startup, sorry!  However,
 # once kicked off, should be good until reboot.
-#
-# See 'nvscmd' script for the rudimentary fan control policy (one designed
-# to eek out a few percent more perf with very noticeable but still
-# tolerable fan noise).
+
+# Check the installation of ruby
+command -v ruby >/dev/null 2>&1 || { echo "Ruby ( >2 ) is required. Aborting." >&2; exit 1; }
+
+# Check permission
+if (( $EUID != 0 )); then
+    echo "Please run as root"
+    exit
+fi
 
 SCRIPT=`realpath $0`
 DIR=`dirname $SCRIPT`
