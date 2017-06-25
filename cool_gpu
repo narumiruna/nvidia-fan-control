@@ -37,7 +37,8 @@
 # to eek out a few percent more perf with very noticeable but still
 # tolerable fan noise).
 
-dir=/opt/set-gpu-fans
+SCRIPT=`realpath $0`
+DIR=`dirname $SCRIPT`
 
 /usr/bin/nvidia-smi -pm 1
 
@@ -51,13 +52,12 @@ for s in `eval ${pciid}`
 do \
     cfg=`mktemp /tmp/xorg-XXXXXXXX.conf`
     sed -e s,@GPU_BUS_ID@,${s},    \
-        -e s,@SET_GPU_DIR@,${dir}, \
-        ${dir}/xorg.conf >> ${cfg}
+        -e s,@SET_GPU_DIR@,${DIR}, \
+        ${DIR}/xorg.conf >> ${cfg}
     # we keep one X server per GPU running indefinitely
     # (if we let the X server die, the fan config does not persist, no matter what else)
-    xinit ${dir}/nvscmd run_forever -- :${disp} -once -config ${cfg} &
+    xinit ${DIR}/nvscmd run_forever -- :${disp} -once -config ${cfg} &
     disp=$((disp+1))
     sleep 10
     rm -f ${cfg}
 done
-
