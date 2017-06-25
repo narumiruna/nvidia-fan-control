@@ -42,22 +42,32 @@ DIR=`dirname $SCRIPT`
 
 /usr/bin/nvidia-smi -pm 1
 
+# Convert INT and TERM to EXIT, and kill all sub-porcesses on exit
+trap "exit" INT TERM
+trap "kill 0" EXIT
+
 # we need to launch the X server once for each display
 # making each of the PCI IDs the primary device in turn.
 
 # get PCI bus ids of Nvidia cards and convert from hexadecimal to decimal. watch out for the falling toothpicks.
 pciid=`lspci  | sed -n -e '/VGA compatib.*NVIDIA/s/^\(..\):\(..\).\(.\).*/printf "PCI:%d:%d:%d\\\\\\\\n" 0x\1 0x\2 0x\3;/p'`
-disp=0
-for s in `eval ${pciid}`
+display=0
+for device in `eval ${pciid}`
 do \
-    cfg=`mktemp /tmp/xorg-XXXXXXXX.conf`
-    sed -e s,@GPU_BUS_ID@,${s},    \
+    CFG=`mktemp /tmp/xorg-XXXXXXXX.conf`
+    sed -e s,@GPU_BUS_ID@,${device},    \
         -e s,@SET_GPU_DIR@,${DIR}, \
-        ${DIR}/xorg.conf >> ${cfg}
+        ${DIR}/xorg.conf >> ${CFG}
     # we keep one X server per GPU running indefinitely
     # (if we let the X server die, the fan config does not persist, no matter what else)
-    xinit ${DIR}/nvscmd run_forever -- :${disp} -once -config ${cfg} &
-    disp=$((disp+1))
-    sleep 10
-    rm -f ${cfg}
+    xinit ${DIR}/nvscmd run_forever -- :${display} -once -config ${CFG} &
+    display=$((display+1))
+    sleep 5
+    rm -f ${CFG}
+done
+
+# Just wait for sub-processes
+for job in `jobs -p`
+do
+    wait $job
 done
