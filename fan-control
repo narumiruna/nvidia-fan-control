@@ -60,7 +60,7 @@ do \
         ${DIR}/xorg.conf >> ${CFG}
     # we keep one X server per GPU running indefinitely
     # (if we let the X server die, the fan config does not persist, no matter what else)
-    xinit ${DIR}/nvscmd run_forever -- :${display} -once -config ${CFG} &
+    xinit ${DIR}/fan-speed -- :${display} -once -config ${CFG} &
     display=$((display+1))
     sleep 5
     rm -f ${CFG}
