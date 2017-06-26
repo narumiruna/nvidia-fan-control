@@ -118,7 +118,7 @@ class Config
   end
 
   def current_time
-    @time ||= Time.now.getlocal(@config['time_zone'])
+    Time.now.getlocal(@config['time_zone'])
   end
 
   def current_time_falls_in_range?(range)
