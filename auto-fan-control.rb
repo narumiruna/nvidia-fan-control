@@ -42,25 +42,23 @@ end
 private
 
 def run
-  last_temp = get_current_temp
-  last_speed = get_next_fan_speed(last_temp)
-  set_fan_speed(last_speed)
+  last_speed = 'UNKNOWN'
 
-  puts "Start speed contorl. Temperature is #{last_temp}.  Setting fan speed to #{last_speed}."
+  puts "Starting speed contorl..."
 
   while true do
-    sleep config.refresh_interval
-
     temp = get_current_temp
-    if temp != last_temp
-      next_speed = get_next_fan_speed(temp)
+    next_speed = get_next_fan_speed(temp)
+    if next_speed != last_speed
       puts "Current temperature is #{temp}.  Setting fan speed to #{next_speed} (from #{last_speed})."
 
       set_fan_speed(next_speed)
       last_speed = next_speed
     else
-      puts "Current temperature is #{temp}.  No adjustments needed."
+      puts "Current temperature: #{temp},  speed: #{last_speed}.  No adjustments needed."
     end
+
+    sleep config.refresh_interval
   end
 end
 
