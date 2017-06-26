@@ -145,8 +145,25 @@ class Config
   end
 end
 
+def shut_down
+  puts 'Exiting program, restore fan control to AUTO'
+  set_fan_speed(SPEED_AUTO)
+end
+
+# Trap ^C
+Signal.trap('INT') do
+  shut_down
+  exit
+end
+
+# Trap `Kill `
+Signal.trap('TERM') do
+  shut_down
+  exit
+end
+
 begin
   run()
 ensure
-  set_fan_speed(SPEED_AUTO)
+  shut_down
 end
