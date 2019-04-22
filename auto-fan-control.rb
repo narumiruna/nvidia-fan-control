@@ -1,10 +1,5 @@
 #!/usr/bin/env ruby
 
-# Return devices
-def get_devices()
-  config.devices
-end
-
 SPEED_AUTO = -1
 # Return a fan speed based on temp.
 def get_next_fan_speed(temp)
@@ -34,7 +29,7 @@ def get_current_temp
 end
 
 def set_fan_speed(speed)
-  devices = get_devices()
+  devices = config.devices
   if speed == SPEED_AUTO
     for device in devices do
       `/usr/bin/nvidia-settings -a '[gpu:#{device}]/GPUFanControlState=0'`
