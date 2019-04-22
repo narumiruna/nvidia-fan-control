@@ -13,6 +13,8 @@ cd nvidia-fan-control && sudo ./fan-control
 # Configuration
 ```yaml
 time_zone: '+08:00'
+# Devices to be controlled
+devices: [0, 1]
 # The interval to check and set fan speed
 refresh_interval: 5
 # Config is in follow format:
