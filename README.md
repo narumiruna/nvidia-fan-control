@@ -6,7 +6,7 @@
 ```shell
 sudo apt-get install ruby2.3
 
-git clone https://github.com/allenwq/nvidia-fan-control
+git clone https://github.com/narumiruna/nvidia-fan-control
 cd nvidia-fan-control && sudo ./fan-control
 ```
 
