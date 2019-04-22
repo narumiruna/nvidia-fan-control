@@ -1,5 +1,5 @@
 time_zone: '+08:00'
-# The list of devices to be controlled
+# Devices to be controlled
 devices: [0, 1]
 # The interval to check and set fan speed
 refresh_interval: 5
