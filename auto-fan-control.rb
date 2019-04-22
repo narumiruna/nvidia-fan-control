@@ -30,12 +30,17 @@ end
 
 def set_fan_speed(speed)
   if speed == SPEED_AUTO
-    `/usr/bin/nvidia-settings -a '[gpu:0]/GPUFanControlState=0'`
+    for device in 0..10 do
+      `/usr/bin/nvidia-settings -a '[gpu:#{device}]/GPUFanControlState=0'`
+    end
     return
   end
 
   if speed > 0
-    `/usr/bin/nvidia-settings -a [gpu:0]/GPUFanControlState=1 -a [fan:0]/GPUTargetFanSpeed=#{speed}`
+    device = 0
+    for device in 0..10 do
+      `/usr/bin/nvidia-settings -a [gpu:#{device}]/GPUFanControlState=1 -a [fan:#{device}]/GPUTargetFanSpeed=#{speed}`
+    end
   end
 end
 
